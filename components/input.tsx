@@ -6,7 +6,7 @@ export default function Input({value,onChange}:{value:string,onChange:Function})
         name="doitText"
         id="doitText"
         placeholder="할 일을 입력해주세요"
-        className={"bg-[--state100] p-0 m-0 w-full outline-0"}
+        className={"bg-[var(--state-100)] p-0 m-0 w-full outline-0 shadow"}
         onChange={(e) => onChange(e)}
         value={value}
       />

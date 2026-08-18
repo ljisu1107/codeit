@@ -4,16 +4,21 @@
   --background: #ffffff;
   --foreground: #171717;
   /*디자인 시스템 컬러 변수*/
-  --state900:#0F172A;
-  --state800:#1E293B;
-  --state500:#64748B;
-  --state400:#94A3B8;
-  --state300:#CBD5E1;
-  --state200:#E2E8F0;
-  --state100:#F1F5F9;
+  --state-900:#0F172A;
+  --state-800:#1E293B;
+  --state-500:#64748B;
+  --state-400:#94A3B8;
+  --state-300:#CBD5E1;
+  --state-200:#E2E8F0;
+  --state-100:#F1F5F9;
 
   --color-violet-600:#7C3AED;
+  --color-violet-100:#EDE9FE;
 
+  --color-rose-500:#F43F5E;
+  --color-lime-300:#BEF264;
+
+  --color-amber-800:#92400E;
 }
 
 @theme inline {
@@ -30,12 +35,19 @@
 
 body {
   background: var(--background);
-  color: var(--state900);
+  color: var(--state-900);
   font-family: Arial, Helvetica, sans-serif;
 }
 
 .shadow{
-  box-shadow: 2px 2px 2px var(--state900);
-  border:2px solid var(--state900);
+  box-shadow: 2px 2px 2px var(--state-900);
+  border:2px solid var(--state-900);
   box-sizing:border-box;
+  padding:0.75rem 1rem;
+  border-radius: 2rem;
+}
+
+.btn-style{
+  box-sizing:border-box;
+  padding:0.75rem 1rem;
 }
