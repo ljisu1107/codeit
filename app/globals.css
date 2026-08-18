@@ -3,13 +3,22 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  /*디자인 시스템 컬러 변수*/
+  --state900:#0F172A;
+  --state800:#1E293B;
+  --state500:#64748B;
+  --state400:#94A3B8;
+  --state300:#CBD5E1;
+  --state200:#E2E8F0;
+  --state100:#F1F5F9;
+
+  --color-violet-600:#7C3AED;
+
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -21,6 +30,12 @@
 
 body {
   background: var(--background);
-  color: var(--foreground);
+  color: var(--state900);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.shadow{
+  box-shadow: 2px 2px 2px var(--state900);
+  border:2px solid var(--state900);
+  box-sizing:border-box;
 }
