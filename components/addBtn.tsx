@@ -11,7 +11,7 @@ export default function AddBtn({fn,disabled}:fnProps){
     <div className="flex w-auto items-center justify-center margin-[0 auto] ml-4 ">
       <div
         className="flex w-full max-w-3xl flex-col items-center justify-between sm:items-start margin-[0 auto] py-4 ">
-        <button className={"btn shadow bg-(--state-200) flex flex-row break-keep w-max"} onClick={()=>fn()} disabled={disabled}>
+        <button className={"btn shadow bg-(--state-200) flex flex-row break-keep w-max"} onClick={() => fn && fn()} disabled={disabled}>
           <Image
             className="h-max[40px] w-max-[40px] mr-0 sm:mr-2"
             src="/plus.svg"

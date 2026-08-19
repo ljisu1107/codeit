@@ -3,9 +3,8 @@
 import Input from "@/components/input";
 import AddBtn from "@/components/addBtn";
 import {apiCall} from "@/script";
-import {useEffect, useState} from "react";
+import {SetStateAction, useEffect, useState} from "react";
 import Image from "next/image";
-import Link from "next/link";
 import CheckListItem from "@/components/checkListItem";
 
 interface Todo {
@@ -77,7 +76,7 @@ export default function Page() {
       <main className="flex flex-col flex-1 w-full max-w-7xl ">
 
         <div className="flex flex-row w-full justify-start px-6">
-          <Input value={newTodoName} onChange={(e) => setNewTodoName(e.target.value)}/>
+          <Input value={newTodoName} onChange={(e: { target: { value: SetStateAction<string>; }; }) => setNewTodoName(e.target.value)}/>
           <AddBtn fn={handleAddTodo} disabled={adding}/>
         </div>
 
