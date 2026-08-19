@@ -1,7 +1,7 @@
 "use client"
 import { useRouter } from "next/navigation";
-import {apiCall} from "@/script";
-import {useEffect, useState} from "react";
+import {apiCall, imageUpload} from "@/script";
+import {useEffect, useRef, useState} from "react";
 import {useParams} from "next/navigation";
 import Image from "next/image";
 import CheckBtn from "@/components/checkBtn";
@@ -17,6 +17,7 @@ interface TodoDetails {
 
 export default function Page() {
   const router = useRouter(); // 라우터 최상단에 선언
+  const fileInputRef = useRef<HTMLInputElement>(null); // 파일 ref
 
   const params = useParams<{ id: string }>() // 상세 id
   const [loading, setLoading] = useState(true); // 로딩
@@ -48,36 +49,6 @@ export default function Page() {
     }
   }
 
-  // 할 일 수정하기
-  async function handleFixedTodo() {
-    if (!todoDetails.name.trim()) return; // 제목 빈 값 방지
-    try {
-      //서버에서 응답을 요청한 값만 보내기
-      const created = await apiCall({
-        id: "jisu",
-        method: "PATCH",
-        url: "items/"+params.id,
-        body: {
-          name: todoDetails.name,
-          memo: todoDetails.memo || "",
-          imageUrl: todoDetails.imageUrl || "",
-          isCompleted: todoDetails.isCompleted,
-        },
-      });
-      //상태 반영
-      setTodoDetails((prev) => {
-        return {...prev,...created}
-      });
-      router.replace("/");
-
-    } catch (err) {
-      console.error("할 일 수정하기 실패:", err);
-      alert("할 일 수정에 실패했어요. 다시 시도해주세요.");
-    } finally {
-      setFixed(false);
-    }
-  }
-
   // 할일 삭제하기
   async function handleDeleteTodo() {
     if (!todoDetails.id && !todoDetails.tenantId) return;
@@ -94,6 +65,79 @@ export default function Page() {
     }catch  (err) {
       console.error("할 일 삭제하기 실패:", err);
       alert("할 일 삭제에 실패했어요. 다시 시도해주세요.");
+    }
+  }
+
+  // 이미지 미리보기 반영 및 용량 체크
+  async function handleFileChange(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      alert("이미지 파일만 업로드할 수 있습니다.");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      alert("이미지 용량은 5MB 이하만 가능합니다.");
+      return;
+    }
+    const imageUrl = URL.createObjectURL(file);
+    setTodoDetails((prev)=>{
+      return {...prev,imageUrl:imageUrl};
+    });
+  }
+
+  //image file upload 함수
+  async function handleImageUpload(){
+    const formData = new FormData();
+    const file = fileInputRef.current?.files?.[0];
+    if (!file) return;
+
+    formData.append("image", file);
+
+    try {
+      const result = await imageUpload({
+        tenantId:todoDetails.tenantId,
+        formData:formData
+      });
+      // 기획상 제출 성공 시 목록으로 이동하기로 되어 있어 상태 새로고침이 되기 때문에 (초기화) 상태 반영 X
+      return result.url;
+    } catch (err) {
+      console.error("이미지 업로드 실패:", err);
+      alert("이미지 업로드에 실패했습니다. 다시 시도해주세요.");
+    } finally {
+    }
+  }
+
+  // 할 일 수정하기
+  async function handleFixedTodo() {
+    if (!todoDetails.name.trim()) return; // 제목 빈 값 방지
+
+    try {
+      const imageUrl = await handleImageUpload();
+      //서버에서 응답을 요청한 값만 보내기
+      const created = await apiCall({
+        id: "jisu",
+        method: "PATCH",
+        url: "items/"+params.id,
+        body: {
+          name: todoDetails.name,
+          memo: todoDetails.memo || "",
+          imageUrl: !!imageUrl ? imageUrl : todoDetails.imageUrl || "", // 이미지 변경 있을 시 변경된 url로 없으면 api 받아온 값으로
+          isCompleted: todoDetails.isCompleted,
+        },
+      });
+      //상태 반영
+      setTodoDetails((prev) => {
+        return {...prev,...created}
+      });
+      router.replace("/");
+
+    } catch (err) {
+      console.error("할 일 수정하기 실패:", err);
+      alert("할 일 수정에 실패했어요. 다시 시도해주세요.");
+    } finally {
+      setFixed(false);
     }
   }
 
@@ -137,18 +181,18 @@ export default function Page() {
             }
             {
               !!todoDetails.imageUrl ?
-                <button className={"img-btn"}>
+                <button className={"img-btn opacity-50 bg-(--state-900)! border-2! cursor-pointer"} onClick={() => fileInputRef?.current?.click()}>
                   <Image
                     className="h-max[40px] w-max-[40px]"
-                    src="/img.svg"
-                    alt="img"
+                    src="/edit.svg"
+                    alt="edit"
                     width={40}
                     height={40}
                     priority
                   />
                 </button>
                 :
-                <button className={"img-btn"}>
+                <button className={"img-btn"} onClick={() => fileInputRef?.current?.click()}>
                   <Image
                     className="h-max[40px] w-max-[40px]"
                     src="/plus_detail.svg"
@@ -159,6 +203,8 @@ export default function Page() {
                   />
                 </button>
             }
+
+            <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
           </div>
 
           <div className="flex flex-col w-full items-start text-center sm:w-full md:w-full lg:w-5/7 p-0 md:pl-6">
