@@ -4,9 +4,10 @@ import {apiCall} from "@/script";
 import {useEffect, useState} from "react";
 import {useParams} from "next/navigation";
 import Image from "next/image";
+import CheckBtn from "@/components/checkBtn";
 
 interface TodoDetails {
-  isCompleted?: boolean,
+  isCompleted: boolean,
   imageUrl: string,
   memo: string ,
   name: string,
@@ -58,12 +59,12 @@ export default function Page() {
         url: "items/"+params.id,
         body: {
           name: todoDetails.name,
-          memo: todoDetails.memo,
+          memo: todoDetails.memo || "",
           imageUrl: todoDetails.imageUrl || "",
           isCompleted: todoDetails.isCompleted,
         },
       });
-
+      //상태 반영
       setTodoDetails((prev) => {
         return {...prev,...created}
       });
@@ -79,9 +80,7 @@ export default function Page() {
 
   // 할일 삭제하기
   async function handleDeleteTodo() {
-
     if (!todoDetails.id && !todoDetails.tenantId) return;
-
     try{
       if(confirm("정말 할일을 삭제하시겠습니까? 복구가 불가능 합니다.")){
         await apiCall({
@@ -107,12 +106,12 @@ export default function Page() {
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50">
       <main className="flex flex-col flex-1 w-full max-w-7xl items-start py-6 px-14 bg-white">
 
-        <div className="w-full flex text-center items-center justify-center mb-8 h-14 none-checked">
-          <span className={"border-2 w-8 h-8 rounded-[30px] block mr-4 bg-[#FEFCE8]"}></span>
+        <div className={`w-full flex text-center items-center justify-center mb-8 h-14 ${todoDetails.isCompleted ? "checked underline!" : "none-checked"}`}>
+          <CheckBtn isChecked={todoDetails.isCompleted} setTodoDetails={setTodoDetails} />
           <input
             type="text"
             value={todoDetails.name}
-            className={"h-full outline-0"}
+            className={`h-full outline-0`}
             onChange={(e) =>
               setTodoDetails((prev:TodoDetails)=> {
                 return {...prev, name: e.target.value}

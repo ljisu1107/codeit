@@ -62,14 +62,14 @@ body {
   }
 }
 
-
 .checked{
   border:2px solid var(--state-900);
   box-sizing:border-box;
   border-radius: 2rem;
   background-color:var(--color-violet-100);
   text-decoration: line-through;
-  span{
+  padding:0.4rem;
+  button{
     background-color: var(--color-violet-600);
     display:flex;
     flex-direction: column;

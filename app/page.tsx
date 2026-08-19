@@ -64,8 +64,6 @@ export default function Page() {
   }
 
 
-
-
   // 반영
   useEffect(() => {
     fetchTodos();
@@ -79,12 +77,20 @@ export default function Page() {
       <main className="flex flex-col flex-1 w-full max-w-7xl ">
 
         <div className="flex flex-row w-full justify-start px-6">
-          <Input value={newTodoName} onChange={(e: { target: { value: SetStateAction<string>; }; }) => setNewTodoName(e.target.value)}/>
+          <Input
+            value={newTodoName}
+            onChange={(e: { target: { value: SetStateAction<string>; }; }) => setNewTodoName(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.nativeEvent.isComposing) {
+                handleAddTodo();
+              }
+            }}
+          />
           <AddBtn fn={handleAddTodo} disabled={adding}/>
         </div>
 
         <div className="flex flex-col items-start justify-between py-6 px-6 md:flex-row sm:items-start">
-          <div className="flex flex-col w-full items-start text-center sm:w-full md:w-full lg:w-1/2 mb-8">
+          <div className="flex flex-col w-full items-start text-center sm:w-full md:w-full lg:w-1/2 mb-8 mr-0 sm:mr-0 md:mr-4 lg:mr-4">
             <div>
               <h4 className={"mb-4"}>
                 <Image
@@ -124,7 +130,7 @@ export default function Page() {
             }
           </div>
 
-          <div className="flex flex-col w-full items-start text-center sm:w-full md:w-full lg:w-1/2">
+          <div className="flex flex-col w-full items-start text-center sm:w-full md:w-full lg:w-1/2 ml-0 sm:ml-0 md:ml-4 lg:ml-4">
             <h4 className={"mb-4"}>
               <Image
                 className="h-max[10px] w-max-[40px]"
@@ -157,7 +163,7 @@ export default function Page() {
                   </div>
                   :
                   doneItems.map((item) =>
-                    <CheckListItem id={item.id} name={item.name} isChecked={item.isCompleted} />
+                    <CheckListItem key={item.id}  id={item.id} name={item.name} isChecked={item.isCompleted} />
                   )
             }
           </div>
