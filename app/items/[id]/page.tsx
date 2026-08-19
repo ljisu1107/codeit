@@ -38,7 +38,6 @@ export default function Page() {
         method: "GET",
         url: 'items/' + params.id,
       });
-      console.log(data);
       setLoading(true);
       setTodoDetails(data);
     } catch (err) {
@@ -68,7 +67,6 @@ export default function Page() {
       setTodoDetails((prev) => {
         return {...prev,...created}
       });
-
       router.replace("/");
 
     } catch (err) {
@@ -79,17 +77,37 @@ export default function Page() {
     }
   }
 
+  // 할일 삭제하기
+  async function handleDeleteTodo() {
+
+    if (!todoDetails.id && !todoDetails.tenantId) return;
+
+    try{
+      if(confirm("정말 할일을 삭제하시겠습니까? 복구가 불가능 합니다.")){
+        await apiCall({
+          id: "jisu",
+          method: "DELETE",
+          url: "items/"+params.id,
+        });
+        router.replace("/");
+      }
+
+    }catch  (err) {
+      console.error("할 일 삭제하기 실패:", err);
+      alert("할 일 삭제에 실패했어요. 다시 시도해주세요.");
+    }
+  }
+
   //반영
   useEffect(() => {
     fetchTodoDetails();
   }, []);
 
-
   return (
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50">
       <main className="flex flex-col flex-1 w-full max-w-7xl items-start py-6 px-14 bg-white">
 
-        <button className="w-full flex text-center items-center justify-center mb-8 h-14 none-checked">
+        <div className="w-full flex text-center items-center justify-center mb-8 h-14 none-checked">
           <span className={"border-2 w-8 h-8 rounded-[30px] block mr-4 bg-[#FEFCE8]"}></span>
           <input
             type="text"
@@ -101,7 +119,7 @@ export default function Page() {
               })
             }
           />
-        </button>
+        </div>
 
         <div className="flex flex-col w-full items-start justify-between md:flex-row sm:items-start">
           <div className="flex flex-col w-full text-center justify-center items-center sm:w-full md:w-full lg:w-2/7 border-dashed border-4 border-(--state-200) bg-[#F8FAFC] h-75 rounded-4xl">
@@ -119,7 +137,7 @@ export default function Page() {
             <textarea
               name="memo"
               id="memo"
-              className={"w-full outline-none bg-[url(/memo.svg)] h-75 resize-none"}
+              className={"w-full outline-none bg-[url(/memo.svg)] h-75 resize-none p-4"}
               value={todoDetails.memo === null ? "" : todoDetails.memo}
               onChange={(e) => {
                 setTodoDetails((prev:TodoDetails)=> {
@@ -131,7 +149,7 @@ export default function Page() {
           </div>
         </div>
 
-        <div className="flex flex-row p-2 w-full items-center justify-end mb-8 h-14">
+        <div className="flex flex-row p-2 w-full items-center justify-end mb-8 h-14 mt-4">
           <button
             className={"btn-style shadow flex-row flex mr-4 bg(--state-200) cursor-pointer"}
             onClick={handleFixedTodo}
@@ -146,7 +164,10 @@ export default function Page() {
             />
             수정완료
           </button>
-          <button className={"btn-style shadow flex-row flex bg-(--color-rose-500) text-white cursor-pointer"}>
+          <button
+            className={"btn-style shadow flex-row flex bg-(--color-rose-500) text-white cursor-pointer"}
+            onClick={handleDeleteTodo}
+          >
             <Image
               src="/X.svg"
               alt="delete"
