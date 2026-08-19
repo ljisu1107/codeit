@@ -1,7 +1,7 @@
 const apiUrl:string = process.env.NEXT_PUBLIC_TODO_LIST_API_URL || "https://assignment-todolist-api.vercel.app/api";
 
 interface apiCallProps {
-  method: "GET" | "POST" | "PUT" | "DELETE" | null;
+  method: "GET" | "POST" | "PUT" | "DELETE"| "PATCH" | null;
   id: string;
   url: string | null | undefined;
   page?: number;
@@ -12,7 +12,8 @@ interface apiCallProps {
 export async function apiCall({method,id,url,body,page,pageSize}:apiCallProps){
   const meth = !!method ? method : "GET";
   const urls:string = !!url ? url : "";
-  const makeUrl = `${apiUrl}/${encodeURIComponent(id)}/${urls}?page=${page}&pageSize=${pageSize}`;
+  const pageInfo = !!page && !!pageSize ? `?page=${page}&pageSize=${pageSize}`: '';
+  const makeUrl = `${apiUrl}/${encodeURIComponent(id)}/${urls}${pageInfo}`;
 
   try{
     const res = await fetch(makeUrl, {

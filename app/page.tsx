@@ -5,6 +5,8 @@ import AddBtn from "@/components/addBtn";
 import {apiCall} from "@/script";
 import {useEffect, useState} from "react";
 import Image from "next/image";
+import Link from "next/link";
+import CheckListItem from "@/components/checkListItem";
 
 interface Todo {
   id: number;
@@ -12,7 +14,7 @@ interface Todo {
   isCompleted: boolean;
 }
 
-export default function Home() {
+export default function Page() {
 
   const [loading, setLoading] = useState(true); // 로딩
 
@@ -50,7 +52,7 @@ export default function Home() {
         id: "jisu",
         method: "POST",
         url: "items",
-        body: { name: newTodoName },
+        body: {name: newTodoName},
       });
       setTodos((prev) => [...prev, created]); // 새로 받은 값을 목록에 추가
       setNewTodoName(""); // 입력창 초기화
@@ -69,13 +71,13 @@ export default function Home() {
 
   const todoItems = todos.filter((t) => !t.isCompleted); // 할일 목록
   const doneItems = todos.filter((t) => t.isCompleted); // 완료한 할일 목록
-  console.log(doneItems);
+
   return (
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans">
       <main className="flex flex-col flex-1 w-full max-w-7xl ">
 
         <div className="flex flex-row w-full justify-start px-6">
-          <Input value={newTodoName} onChange={(e) => setNewTodoName(e.target.value)} />
+          <Input value={newTodoName} onChange={(e) => setNewTodoName(e.target.value)}/>
           <AddBtn fn={handleAddTodo} disabled={adding}/>
         </div>
 
@@ -85,7 +87,7 @@ export default function Home() {
               <h4 className={"mb-4"}>
                 <Image
                   className="h-max[10px] w-max-[40px]"
-                  style={{ width: '100%', height: 'auto' }}
+                  style={{width: '100%', height: 'auto'}}
                   src="/todo.svg"
                   alt="todo"
                   width={100}
@@ -98,9 +100,25 @@ export default function Home() {
               loading ?
                 "로딩중..."
                 :
-                todoItems.map((item) =>
-                  <div key={item.id}>{item.name}</div>
-                )
+                todoItems.length === 0 ?
+                  <div className={"flex flex-col w-full items-center justify-center"}>
+                    <Image
+                      className="h-max[240px] w-max-[240px]"
+                      src="/todo_large.svg"
+                      alt="todo"
+                      width={240}
+                      height={240}
+                      priority
+                    />
+                    <p className={"text-(--state-400)"}>
+                      할 일이 없어요.<br />
+                      TODO를 새롭게 추가해주세요!
+                    </p>
+                  </div>
+                  :
+                  todoItems.map((item) =>
+                    <CheckListItem key={item.id} id={item.id} name={item.name} isChecked={item.isCompleted}/>
+                  )
             }
           </div>
 
@@ -112,7 +130,7 @@ export default function Home() {
                 alt="done"
                 width={100}
                 height={100}
-                style={{ width: '100%', height: 'auto' }}
+                style={{width: '100%', height: 'auto'}}
                 priority
               />
             </h4>
@@ -120,26 +138,25 @@ export default function Home() {
               loading ?
                 "로딩중..."
                 :
-                doneItems.map((item) =>
-                  !!item ?
-                    <div key={item.id}>{item.name}</div>
-                    :
-                    <div>
-                      <Image
-                        className="h-max[10px] w-max-[40px]"
-                        src="/done_large.svg"
-                        alt="done"
-                        width={100}
-                        height={100}
-                        style={{ width: '100%', height: 'auto' }}
-                        priority
-                      />
-                      <p>
-                        아직 다 한 일이 없어요.<br />
-                        해야 할 일을 체크해보세요!
-                      </p>
-                    </div>
-                )
+                doneItems.length === 0 ?
+                  <div className={"flex flex-col w-full items-center justify-center"}>
+                    <Image
+                      className="h-max[240px] w-max-[240px]"
+                      src="/done_large.svg"
+                      alt="done"
+                      width={240}
+                      height={240}
+                      priority
+                    />
+                    <p className={"text-(--state-400)"}>
+                      아직 다 한 일이 없어요.<br/>
+                      해야 할 일을 체크해보세요!
+                    </p>
+                  </div>
+                  :
+                  doneItems.map((item) =>
+                    <CheckListItem id={item.id} name={item.name} isChecked={item.isCompleted} />
+                  )
             }
           </div>
         </div>
