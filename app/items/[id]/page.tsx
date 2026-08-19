@@ -69,7 +69,7 @@ export default function Page() {
   }
 
   // 이미지 미리보기 반영 및 용량 체크
-  async function handleFileChange(e) {
+  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -97,7 +97,7 @@ export default function Page() {
 
     try {
       const result = await imageUpload({
-        tenantId:todoDetails.tenantId,
+        tenantId:todoDetails.tenantId || "",
         formData:formData
       });
       // 기획상 제출 성공 시 목록으로 이동하기로 되어 있어 상태 새로고침이 되기 때문에 (초기화) 상태 반영 X
@@ -204,7 +204,7 @@ export default function Page() {
                 </button>
             }
 
-            <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
+            <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={(e)=>handleFileChange(e)} />
           </div>
 
           <div className="flex flex-col w-full items-start text-center sm:w-full md:w-full lg:w-5/7 p-0 md:pl-6">

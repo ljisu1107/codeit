@@ -8,6 +8,10 @@ interface apiCallProps {
   pageSize?: number;
   body?: Record<string, unknown>;
 }
+interface UploadImageProps {
+  formData: FormData;
+  tenantId: string;
+}
 
 // api call 함수
 export async function apiCall({method,id,url,body,page,pageSize}:apiCallProps){
@@ -28,13 +32,13 @@ export async function apiCall({method,id,url,body,page,pageSize}:apiCallProps){
     return res.json();
 
   }catch (err) {
-    console.error("apiCall failed:", e);
+    console.error("apiCall failed:", err);
     throw err; // 호출한 쪽에서 catch 해서 UI 처리할 수 있게 다시 던짐
   }
 }
 
 // 이미지 업로드 api
-export async function imageUpload({formData,tenantId}){
+export async function imageUpload({formData,tenantId}:UploadImageProps){
   try {
     const res = await fetch(apiUrl+"/"+tenantId+"/images/upload", {
       method: "POST",
