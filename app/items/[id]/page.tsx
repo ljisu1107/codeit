@@ -121,17 +121,46 @@ export default function Page() {
         </div>
 
         <div className="flex flex-col w-full items-start justify-between md:flex-row sm:items-start">
-          <div className="flex flex-col w-full text-center justify-center items-center sm:w-full md:w-full lg:w-2/7 border-dashed border-4 border-(--state-200) bg-[#F8FAFC] h-75 rounded-4xl">
-            <Image
-              className="h-max[40px] w-max-[40px]"
-              src="/img.svg"
-              alt="img"
-              width={40}
-              height={40}
-              priority
-            />
-
+          <div className="flex flex-col relative w-full text-center mb-8 justify-center items-center sm:w-full md:w-full lg:w-2/7 border-dashed border-4 border-(--state-200) bg-[#F8FAFC] h-75 rounded-4xl">
+            {
+              !!todoDetails.imageUrl ?
+                <Image src={todoDetails.imageUrl} alt="todo image" fill className="object-cover" />
+                :
+                <Image
+                  className="h-max[40px] w-max-[40px]"
+                  src="/img.svg"
+                  alt="img"
+                  width={40}
+                  height={40}
+                  priority
+                />
+            }
+            {
+              !!todoDetails.imageUrl ?
+                <button className={"img-btn"}>
+                  <Image
+                    className="h-max[40px] w-max-[40px]"
+                    src="/img.svg"
+                    alt="img"
+                    width={40}
+                    height={40}
+                    priority
+                  />
+                </button>
+                :
+                <button className={"img-btn"}>
+                  <Image
+                    className="h-max[40px] w-max-[40px]"
+                    src="/plus_detail.svg"
+                    alt="이미지 추가"
+                    width={40}
+                    height={40}
+                    priority
+                  />
+                </button>
+            }
           </div>
+
           <div className="flex flex-col w-full items-start text-center sm:w-full md:w-full lg:w-5/7 p-0 md:pl-6">
             <textarea
               name="memo"
@@ -150,7 +179,7 @@ export default function Page() {
 
         <div className="flex flex-row p-2 w-full items-center justify-end mb-8 h-14 mt-4">
           <button
-            className={"btn-style shadow flex-row flex mr-4 bg(--state-200) cursor-pointer"}
+            className={"btn-style shadow flex-row flex mr-4 bg(--state-200) cursor-pointer px-8!"}
             onClick={handleFixedTodo}
           >
             <Image
@@ -164,7 +193,7 @@ export default function Page() {
             수정완료
           </button>
           <button
-            className={"btn-style shadow flex-row flex bg-(--color-rose-500) text-white cursor-pointer"}
+            className={"btn-style shadow flex-row flex bg-(--color-rose-500) text-white cursor-pointer px-8!"}
             onClick={handleDeleteTodo}
           >
             <Image

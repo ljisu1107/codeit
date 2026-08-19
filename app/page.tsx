@@ -32,7 +32,6 @@ export default function Page() {
         page: 1,
         pageSize: 10
       });
-      console.log(data);
       setLoading(true);
       setTodos(data);
     } catch (err) {

@@ -80,3 +80,22 @@ body {
     }
   }
 }
+
+.img-btn{
+  position:absolute;
+  bottom:1rem;
+  right:1rem;
+  width:64px;
+  height:64px;
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color:var(--state-200);
+  border-radius: 2rem;
+  cursor:pointer;
+  img{
+    width:24px;
+    height:24px;
+  }
+}
